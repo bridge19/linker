@@ -9,7 +9,7 @@ import io.bridge.linker.annotation.FeignModule;
 import io.bridge.linker.common.exception.LinkerRuntimeException;
 import io.bridge.linker.common.integration.ConfigurationUtil;
 import io.bridge.linker.common.integration.ServiceConfig;
-import io.bridge.linker.util.StringUtils;
+import io.bridge.linker.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;

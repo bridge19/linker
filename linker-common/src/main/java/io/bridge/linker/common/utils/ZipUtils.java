@@ -1,4 +1,4 @@
-package io.bridge.linker.util;
+package io.bridge.linker.common.utils;
 
 import org.apache.commons.codec.binary.Base64;
 

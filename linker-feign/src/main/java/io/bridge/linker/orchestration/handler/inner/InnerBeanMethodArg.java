@@ -2,8 +2,8 @@ package io.bridge.linker.orchestration.handler.inner;
 
 import io.bridge.linker.orchestration.annotation.DataId;
 import io.bridge.linker.orchestration.context.TranslationContext;
-import io.bridge.linker.util.ArrayUtils;
-import io.bridge.linker.util.BeanUtils;
+import io.bridge.linker.common.utils.ArrayUtils;
+import io.bridge.linker.common.utils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package io.bridge.linker.util;
+package io.bridge.linker.common.utils;
 
 /**
  * 功能说明：

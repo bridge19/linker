@@ -10,7 +10,7 @@ import io.birdge.linker.support.odata.decoder.impl.IResultHandler;
 import io.birdge.linker.support.odata.decoder.impl.JSONResultHandler;
 import io.birdge.linker.support.odata.decoder.impl.ODataJsonBodyParser;
 import io.bridge.linker.feign.context.FeignRequestContextHolder;
-import io.bridge.linker.util.CollectionUtils;
+import io.bridge.linker.common.utils.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

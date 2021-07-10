@@ -2,7 +2,7 @@ package io.bridge.linker.orchestration.translators;
 
 import io.bridge.linker.orchestration.context.TranslationContext;
 import io.bridge.linker.orchestration.script.ScriptEvaluator;
-import io.bridge.linker.util.BeanUtils;
+import io.bridge.linker.common.utils.BeanUtils;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

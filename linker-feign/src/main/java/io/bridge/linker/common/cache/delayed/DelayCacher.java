@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import io.bridge.linker.common.cache.ExpireHandler;
 import io.bridge.linker.common.spi.Cache;
 import io.bridge.linker.common.spi.ServiceLookup;
-import io.bridge.linker.util.BeanUtils;
+import io.bridge.linker.common.utils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import io.bridge.linker.common.exception.LinkerRuntimeException;
 import io.bridge.linker.orchestration.annotation.DataId;
 import io.bridge.linker.orchestration.context.TranslationContext;
-import io.bridge.linker.util.BeanUtils;
+import io.bridge.linker.common.utils.BeanUtils;
 import feign.Param;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;

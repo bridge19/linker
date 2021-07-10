@@ -14,6 +14,11 @@
     </properties>
     <dependencies>
         <dependency>
+        <groupId>io.bridge.linker</groupId>
+        <artifactId>linker-common</artifactId>
+            <version>${project.version}</version>
+    </dependency>
+        <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
         </dependency>

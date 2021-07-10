@@ -2,7 +2,7 @@ package io.birdge.linker.support.odata.decoder.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import io.bridge.linker.util.BeanUtils;
+import io.bridge.linker.common.utils.BeanUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
