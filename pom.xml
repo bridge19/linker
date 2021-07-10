@@ -14,6 +14,8 @@
 
     <modules>
         <module>linker-feign</module>
+        <module>linker-support-odata</module>
+        <module>linker-support-restful</module>
     </modules>
     <properties>
         <feign.version>9.7.0</feign.version>
@@ -135,12 +137,6 @@
                 <version>${async-client.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>1.5.12.RELEASE</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-test</artifactId>

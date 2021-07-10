@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- log4j2 配置文件 -->
+<Configuration name="log4j2Conf" status="WARN" monitorInterval="60">
+    <properties>
+        <property name="log.path" value="./logs"/>
+        <property name="log.encoding" value="UTF-8"/>
+        <property name="log.level" value="DEBUG"/>
+        <property name="appName" value="linker-sf"/>
+    </properties>
+
+    <Appenders>
+        <!-- Console -->
+        <Console name="console_out_appender" target="SYSTEM_OUT">
+            <PatternLayout charset="${log.encoding}" pattern="%d %-5p %c{2} - %m %X{AppId} %X{LoginId} %X{TrackId}%n"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT"
+                             onMismatch="DENY"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+
+        <!-- LINKER 请求日志 -->
+        <Logger name="io.birdge.linker" level="${log.level}"
+                additivity="false">
+            <AppenderRef ref="console_out_appender"/>
+        </Logger>
+
+        <Logger name="feign.reactor" level="${log.level}"
+                additivity="false">
+            <AppenderRef ref="console_out_appender"/>
+        </Logger>
+        <Root level="${log.level}">
+            <AppenderRef ref="console_out_appender"/>
+        </Root>
+    </Loggers>
+</Configuration>

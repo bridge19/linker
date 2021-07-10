@@ -1,19 +1,22 @@
 package io.bridge.linker.spring;
 
-import io.bridge.linker.annotation.FeignModule;
-import io.bridge.linker.common.exception.LinkerRuntimeException;
-import io.bridge.linker.common.integration.ConfigurationUtil;
-import io.bridge.linker.common.integration.ServiceConfig;
-import io.bridge.linker.util.StringUtils;
 import feign.Contract;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
 import feign.reactor.client.ReactiveHttpRequestInterceptor;
+import io.bridge.linker.annotation.FeignModule;
+import io.bridge.linker.common.exception.LinkerRuntimeException;
+import io.bridge.linker.common.integration.ConfigurationUtil;
+import io.bridge.linker.common.integration.ServiceConfig;
+import io.bridge.linker.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
+import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
+import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -120,28 +123,29 @@ public class LinkerAutoConfiguredRegister
 
   private void parseEnvironment(Environment environment) {
     // spring-boot 2.0.0.RELEASE
-//    Iterable<ConfigurationPropertySource> sources =
-//        ConfigurationPropertySources.get(environment);
-//    Binder binder = new Binder(sources);
-//    BindResult<Properties> bindResult = binder.bind("linked.servers.server", Properties.class);
-//    Properties properties;
-//    try {
-//      properties = bindResult.get();
-//    }catch (NoSuchElementException e){
-//      return;
-//    }
-    RelaxedPropertyResolver relaxedPropertyResolver =
-        new RelaxedPropertyResolver(environment, "linker.servers.");
-    Map<String, Object> propertieMap = relaxedPropertyResolver.getSubProperties("server.");
-    if (propertieMap.size() > 0) {
+    Iterable<ConfigurationPropertySource> sources =
+        ConfigurationPropertySources.get(environment);
+    Binder binder = new Binder(sources);
+    BindResult<Properties> bindResult = binder.bind("linked.servers.server", Properties.class);
+    Properties properties;
+    try {
+      properties = bindResult.get();
+    }catch (NoSuchElementException e){
+      return;
+    }
+    //spring-boot 1.5.0
+//    RelaxedPropertyResolver relaxedPropertyResolver =
+//        new RelaxedPropertyResolver(environment, "linker.servers.");
+//    Map<String, Object> propertieMap = relaxedPropertyResolver.getSubProperties("server.");
+    if (properties.size() > 0) {
       Map<Integer, Properties> propertiesMap = new HashMap<>();
       Integer DEF = Integer.valueOf(-1);
-      Iterator<Entry<String, Object>> it = propertieMap.entrySet().iterator();
+      Iterator<Entry<Object, Object>> it = properties.entrySet().iterator();
       Integer pos = 0;
       //分组
       while (it.hasNext()) {
-        Entry<String, Object> entry = it.next();
-        String key = entry.getKey();
+        Entry entry = it.next();
+        String key = (String) entry.getKey();
         String value = (String) entry.getValue();
 
         int dotPos = key.indexOf('.');
