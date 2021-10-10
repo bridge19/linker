@@ -1,11 +1,15 @@
 package io.bridge.linker.orchestration.translators;
 
+import io.bridge.linker.common.utils.BeanUtils;
+import io.bridge.linker.feign.Types;
 import io.bridge.linker.orchestration.context.TranslationContext;
 import io.bridge.linker.orchestration.script.ScriptEvaluator;
-import io.bridge.linker.common.utils.BeanUtils;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.script.ScriptException;
 import java.lang.reflect.Field;
@@ -25,7 +29,15 @@ public class ScriptTranslator<T> extends AbstractTranslator<Script, T> implement
   public void initialize(Script constraintAnnotation, Type resultType) {
     this.dataIds = constraintAnnotation.dataIds();
     this.scriptStrs = constraintAnnotation.scripts();
-    this.resultType = resultType;
+    if(resultType instanceof ParameterizedType && (((ParameterizedType) resultType).getRawType() == Mono.class || ((ParameterizedType) resultType).getRawType() == Flux.class)){
+      if(((ParameterizedType) resultType).getRawType() == Mono.class){
+        this.resultType = ((ParameterizedType) resultType).getActualTypeArguments()[0];
+      }else{
+        this.resultType = new Types.ParameterizedTypeImpl(null,List.class,((ParameterizedType) resultType).getActualTypeArguments());
+      }
+    }else {
+      this.resultType = resultType;
+    }
   }
 
   @Override
@@ -56,7 +68,7 @@ public class ScriptTranslator<T> extends AbstractTranslator<Script, T> implement
         scriptStr.append(s);
       }
       Object targetValue = ScriptEvaluator.eval(scriptStr.toString(), sourceValue);
-      context.putData(dataId,targetValue);
+      context.putData(dataId, targetValue);
     } catch (ScriptException e) {
       LOGGER.error("write value into context error.", e);
     }
@@ -82,10 +94,10 @@ public class ScriptTranslator<T> extends AbstractTranslator<Script, T> implement
         if (rawTypeName.equals(List.class.getName()) && scriptValue.isArray()) {
           List result = new ArrayList<>();
           for (Map.Entry<String, Object> entry : scriptValue.entrySet()) {
-            result.add(convertValue(entry.getValue(),actualType));
+            result.add(convertValue(entry.getValue(), actualType));
           }
           return result;
-        }else{
+        } else {
           return null;
         }
       } else {

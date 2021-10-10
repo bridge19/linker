@@ -42,6 +42,10 @@ public class RestfulResponseDecoder implements Decoder {
   @Override
   public Object decode(Response response, Type type) throws IOException, FeignException {
     Type responseTypeClass = type;
+
+    if (response.body() == null) {
+      return null;
+    }
     if(!responseTypeClass.getTypeName().equals(ResponseWrapper.class.getName())) {
       responseTypeClass = new ParameterizedType() {
         @Override
@@ -58,9 +62,6 @@ public class RestfulResponseDecoder implements Decoder {
           return null;
         }
       };
-    }
-    if (response.body() == null) {
-      return null;
     }
     Reader reader = response.body().asReader();
 

@@ -1,10 +1,13 @@
 package io.bridge.linker.orchestration.translators;
 
+import io.bridge.linker.common.utils.BeanUtils;
+import io.bridge.linker.feign.Types;
 import io.bridge.linker.orchestration.annotation.Simple;
 import io.bridge.linker.orchestration.context.TranslationContext;
-import io.bridge.linker.common.utils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -23,7 +26,15 @@ public class SimpleTranslator<T> extends AbstractTranslator<Simple, T> implement
   @Override
   public void initialize(Simple constraintAnnotation, Type resultType) {
     this.dataId = constraintAnnotation.dataId();
-    this.resultType = resultType;
+    if(resultType instanceof ParameterizedType && (((ParameterizedType) resultType).getRawType() == Mono.class || ((ParameterizedType) resultType).getRawType() == Flux.class)){
+      if(((ParameterizedType) resultType).getRawType() == Mono.class){
+        this.resultType = ((ParameterizedType) resultType).getActualTypeArguments()[0];
+      }else{
+        this.resultType = new Types.ParameterizedTypeImpl(null,List.class,((ParameterizedType) resultType).getActualTypeArguments());
+      }
+    }else {
+      this.resultType = resultType;
+    }
   }
 
   @Override
@@ -40,8 +51,8 @@ public class SimpleTranslator<T> extends AbstractTranslator<Simple, T> implement
   @Override
   public void writeInto(TranslationContext context, Object sourceValue) {
     try {
-    Object targetValue = convertValue(sourceValue, resultType);
-    context.putData(dataId,targetValue);
+      Object targetValue = convertValue(sourceValue, resultType);
+      context.putData(dataId,targetValue);
     } catch (IllegalAccessException | InstantiationException e) {
       LOGGER.error("write value into context error.", e);
     }
@@ -53,7 +64,7 @@ public class SimpleTranslator<T> extends AbstractTranslator<Simple, T> implement
       return null;
     }
     if (((targetClass instanceof ParameterizedType || BeanUtils.isComplexValueType((Class) targetClass)) && BeanUtils.isSimpleValueType(value.getClass()))
-        || (BeanUtils.isComplexValueType(value.getClass()) && !(targetClass instanceof ParameterizedType || BeanUtils.isComplexValueType((Class)targetClass)))) {
+            || (BeanUtils.isComplexValueType(value.getClass()) && !(targetClass instanceof ParameterizedType || BeanUtils.isComplexValueType((Class)targetClass)))) {
       return null;
     }
     if (targetClass instanceof ParameterizedType) {
